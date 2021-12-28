@@ -67,6 +67,9 @@ async function run() {
             res.send(result);
         })
 
+     
+
+
         // display order to ui to db
         app.get('/order', async (req, res) => {
             const order = orderCollection.find({});
@@ -77,23 +80,25 @@ async function run() {
         app.get('/order/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            const result = await orderCollection.findOne({query});
+            const result = await orderCollection.findOne(query);
             res.json(result);
         })
-        // order filter by email
-        app.get('/order', async (req, res) => {
-            const email = req.query.email;
-            const query = { email: email };
-            const cursor = orderCollection.find(query);
-            const order = await cursor.toArray();
-            res.json(order);
-        })
 
+            // order filter by email
+            app.get('/order/:email', async (req, res) => {
+                const email = req.query.email;
+                const query = { email: email };
+                console.log(query);
+                const cursor = orderCollection.find(query);
+                const order = await cursor.toArray();
+                res.json(order);
+            })
+       
         // delete order
         app.delete('/order/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            const deleteOrder = await orderCollection.deleteOne({query});
+            const deleteOrder = await orderCollection.deleteOne(query);
             res.json(deleteOrder);
             console.log(deleteOrder);
         })
