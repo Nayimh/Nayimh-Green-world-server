@@ -61,13 +61,24 @@ async function run() {
 
 // --------------------------------------------------------------------||
         // post order from ui to db
+
+      
+
         app.post('/order', async (req, res) => {
             const order = req.body;
             const result = await orderCollection.insertOne(order);
             res.send(result);
         })
 
-     
+
+            // // order filter by email
+    app.get("/order/:email", async (req, res) => {
+        const email = req.params?.email;
+        const cursor = orderCollection.find({});
+        const orders = await cursor.toArray();
+        const customerOrder = orders.filter((mail) => mail.email === email);
+        res.send(customerOrder);
+    });
 
 
         // display order to ui to db
@@ -76,6 +87,9 @@ async function run() {
             const result = await order.toArray();
             res.send(result);
         })
+
+          
+
         // finnd single order
         app.get('/order/:id', async (req, res) => {
             const id = req.params.id;
@@ -84,15 +98,7 @@ async function run() {
             res.json(result);
         })
 
-            // order filter by email
-            app.get('/order/:email', async (req, res) => {
-                const email = req.query.email;
-                const query = { email: email };
-                console.log(query);
-                const cursor = orderCollection.find(query);
-                const order = await cursor.toArray();
-                res.json(order);
-            })
+          
        
         // delete order
         app.delete('/order/:id', async (req, res) => {
